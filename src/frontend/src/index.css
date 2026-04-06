@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "GeneralSans";
+  src: url("/assets/fonts/GeneralSans-Variable.woff2") format("woff2");
+  font-weight: 200 700;
+  font-display: swap;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+    /* Dark industrial theme - GearFlow */
+    --background: 0.22 0.01 240;
+    --foreground: 0.94 0.005 240;
+    --card: 0.26 0.015 240;
+    --card-foreground: 0.94 0.005 240;
+    --popover: 0.24 0.012 240;
+    --popover-foreground: 0.94 0.005 240;
+    --primary: 0.67 0.16 55;
+    --primary-foreground: 0.98 0 0;
+    --secondary: 0.3 0.012 240;
+    --secondary-foreground: 0.94 0.005 240;
+    --muted: 0.3 0.012 240;
+    --muted-foreground: 0.72 0.01 240;
+    --accent: 0.67 0.16 55;
+    --accent-foreground: 0.98 0 0;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.98 0 0;
+    --border: 0.32 0.01 240;
+    --input: 0.3 0.012 240;
+    --ring: 0.67 0.16 55;
+    --chart-1: 0.67 0.16 55;
+    --chart-2: 0.64 0.16 155;
+    --chart-3: 0.69 0.15 65;
+    --chart-4: 0.488 0.243 264.376;
+    --chart-5: 0.645 0.246 16.439;
+    --sidebar: 0.24 0.012 240;
+    --sidebar-foreground: 0.94 0.005 240;
+    --sidebar-primary: 0.67 0.16 55;
+    --sidebar-primary-foreground: 0.98 0 0;
+    --sidebar-accent: 0.3 0.012 240;
+    --sidebar-accent-foreground: 0.94 0.005 240;
+    --sidebar-border: 0.32 0.01 240;
+    --sidebar-ring: 0.67 0.16 55;
+    /* Custom tokens */
+    --gearflow-orange: 0.67 0.16 55;
+    --gearflow-green: 0.64 0.16 155;
+    --gearflow-issued: 0.69 0.15 65;
+    --gearflow-panel: 0.26 0.015 240;
+    --gearflow-border: 0.32 0.01 240;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "GeneralSans", "Inter", system-ui, sans-serif;
+    color-scheme: dark;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* Glassmorphism panel */
+.glass-panel {
+  background: oklch(0.26 0.015 240 / 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid oklch(0.32 0.01 240);
+}
+
+/* Industrial background */
+.industrial-bg {
+  background: linear-gradient(
+    135deg,
+    oklch(0.15 0.02 240) 0%,
+    oklch(0.18 0.015 245) 30%,
+    oklch(0.2 0.02 235) 60%,
+    oklch(0.16 0.025 240) 100%
+  );
+  position: relative;
+}
+
+.industrial-bg::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    oklch(1 0 0 / 0.015) 0px,
+    oklch(1 0 0 / 0.015) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: oklch(0.22 0.01 240);
+}
+::-webkit-scrollbar-thumb {
+  background: oklch(0.35 0.01 240);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.67 0.16 55);
+}
+
+/* Nav active underline */
+.nav-active {
+  position: relative;
+}
+.nav-active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: oklch(0.67 0.16 55);
+  border-radius: 1px;
+}
+
+/* Table row hover */
+.tool-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.tool-row:hover {
+  background: oklch(0.3 0.015 240 / 0.6);
+}
+.tool-row.selected {
+  background: oklch(0.67 0.16 55 / 0.12);
+  border-left: 2px solid oklch(0.67 0.16 55);
+}
+
+/* Status badges */
+.badge-available {
+  background: oklch(0.64 0.16 155 / 0.2);
+  color: oklch(0.75 0.14 155);
+  border: 1px solid oklch(0.64 0.16 155 / 0.4);
+}
+.badge-issued {
+  background: oklch(0.67 0.16 55 / 0.2);
+  color: oklch(0.75 0.14 55);
+  border: 1px solid oklch(0.67 0.16 55 / 0.4);
+}
+
+/* KPI card */
+.kpi-card {
+  background: oklch(0.26 0.015 240 / 0.9);
+  border: 1px solid oklch(0.32 0.01 240);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.kpi-card:hover {
+  border-color: oklch(0.67 0.16 55 / 0.5);
+  box-shadow: 0 0 20px oklch(0.67 0.16 55 / 0.1);
+}
