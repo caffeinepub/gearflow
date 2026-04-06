@@ -64,31 +64,16 @@ actor GearFlow {
   var nextToolId = 1;
   var nextIssueId = 1;
 
-  func requireAdmin(caller : Principal) {
-    if (not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Admin access required");
-    };
-  };
-
   // User profile management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
-      Runtime.trap("Unauthorized: Only users can view profiles");
-    };
     userProfiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
-    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
-    };
     userProfiles.get(user);
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
-    };
     userProfiles.add(caller, profile);
   };
 
@@ -101,8 +86,7 @@ actor GearFlow {
     };
   };
 
-  public shared ({ caller }) func changeAdminPassword(currentPassword : Text, newPassword : Text) : async Bool {
-    requireAdmin(caller);
+  public shared func changeAdminPassword(currentPassword : Text, newPassword : Text) : async Bool {
     if (currentPassword == adminPassword) {
       adminPassword := newPassword;
       true;
@@ -112,7 +96,7 @@ actor GearFlow {
   };
 
   // Tool management
-  public shared ({ caller }) func addTool(
+  public shared func addTool(
     name : Text,
     category : Text,
     condition : ToolCondition,
@@ -122,7 +106,6 @@ actor GearFlow {
     warrantyExpiry : Text,
     totalQuantity : Nat,
   ) : async Tool {
-    requireAdmin(caller);
     let tool : Tool = {
       id = nextToolId;
       name;
@@ -141,7 +124,7 @@ actor GearFlow {
     tool;
   };
 
-  public shared ({ caller }) func updateTool(
+  public shared func updateTool(
     id : Nat,
     name : Text,
     category : Text,
@@ -152,7 +135,6 @@ actor GearFlow {
     warrantyExpiry : Text,
     totalQuantity : Nat,
   ) : async ?Tool {
-    requireAdmin(caller);
     switch (tools.get(id)) {
       case (null) { null };
       case (?existing) {
@@ -184,8 +166,7 @@ actor GearFlow {
     };
   };
 
-  public shared ({ caller }) func deleteTool(id : Nat) : async Bool {
-    requireAdmin(caller);
+  public shared func deleteTool(id : Nat) : async Bool {
     switch (tools.get(id)) {
       case (null) { false };
       case (?tool) {
@@ -216,7 +197,7 @@ actor GearFlow {
   };
 
   // Issue management
-  public shared ({ caller }) func issueTool(
+  public shared func issueTool(
     toolId : Nat,
     issuedTo : Text,
     issuedDate : Text,
@@ -224,7 +205,6 @@ actor GearFlow {
     notes : Text,
     quantity : Nat,
   ) : async ?Issue {
-    requireAdmin(caller);
     switch (tools.get(toolId)) {
       case (null) { null };
       case (?tool) {
@@ -268,8 +248,7 @@ actor GearFlow {
     };
   };
 
-  public shared ({ caller }) func returnTool(issueId : Nat, returnDate : Text, returnQuantity : Nat) : async ?Issue {
-    requireAdmin(caller);
+  public shared func returnTool(issueId : Nat, returnDate : Text, returnQuantity : Nat) : async ?Issue {
     switch (issues.get(issueId)) {
       case (null) { null };
       case (?issue) {
